@@ -33,7 +33,7 @@ Shader::Shader(GLenum type, const std::string & sourceFile) :
         std::string shaderSrc = slurp(sourceFile);
         strcpy(TEMP_BUFFER, shaderSrc.c_str());
         const char * cbuffer = TEMP_BUFFER;
-        const char * const * bufferPtr = &cbuffer;
+        const char ** bufferPtr = &cbuffer;
         // Load the shader source
         glShaderSource(shader, 1, bufferPtr, NULL);
     }
