@@ -43,8 +43,8 @@ public:
 //    yoffset float   0.049999997
 //    aspect  float   1.59999943
 //    int xoffset = 268, yoffset = 20;
-    float xoffset = 0.26, yoffset = 0.05;
-    float aspect = 1.6;
+    float xoffset, yoffset;
+    float aspect;
 //    int xoffset = 0, yoffset = 0;
 
     RiftVideoApp(int x = 0, int y = 0, int width = 480, int height = 300)
@@ -54,6 +54,9 @@ public:
                 Vertex::simpleTextured(glm::vec3(ON, ON, ZE), glm::vec2(ON, ON)), //
                 Vertex::simpleTextured(glm::vec3(NO, ON, ZE), glm::vec2(ZE, ON)) //
         }), indices({ 0, 1, 2, 2, 3, 0, }) {
+        xoffset = 0.26;
+        yoffset = 0.05;
+        aspect = 1.6;
     }
 
     void init() {
@@ -91,50 +94,51 @@ public:
     void renderScene(Eye eye) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        standardProgram.use();
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
-        GLint samplerLoc = Program::getActiveProgram().getLocation(UNIFORM, "s_texture");
-        glUniform1i(samplerLoc, 0);
-
-
-
-        Vertex myVertices[] = {
-            Vertex(vertices[0]), //
-            Vertex(vertices[1]), //
-            Vertex(vertices[2]), //
-            Vertex(vertices[3]), //
-        };
-        for (int i = 0; i < 4; ++i) {
-            if (aspect < 1) {
-                myVertices[i].pos.x *= aspect;
-            } else {
-                myVertices[i].pos.y /= aspect;
-            }
-            if (0 == eye) {
-                myVertices[i].pos.x += xoffset;
-                myVertices[i].pos.y += yoffset;
-            } else {
-                myVertices[i].pos.x -= xoffset;
-                myVertices[i].pos.y -= yoffset;
-            }
-        }
-
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, myVertices, GL_DYNAMIC_DRAW);
-
-        GLint ploc = standardProgram.getPositionAttrib();
-        GLint tloc = standardProgram.getTextureAttrib();
-        glEnableVertexAttribArray(ploc);
-        glVertexAttribPointer(ploc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, pos));
-        glEnableVertexAttribArray(tloc);
-        glVertexAttribPointer(tloc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, tex));
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, (void*) 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        Utils::renderSolidColorCube();
+//        standardProgram.use();
+//
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, textures[0]);
+//        GLint samplerLoc = Program::getActiveProgram().getLocation(UNIFORM, "s_texture");
+//        glUniform1i(samplerLoc, 0);
+//
+//
+//
+//        Vertex myVertices[] = {
+//            Vertex(vertices[0]), //
+//            Vertex(vertices[1]), //
+//            Vertex(vertices[2]), //
+//            Vertex(vertices[3]), //
+//        };
+//        for (int i = 0; i < 4; ++i) {
+//            if (aspect < 1) {
+//                myVertices[i].pos.x *= aspect;
+//            } else {
+//                myVertices[i].pos.y /= aspect;
+//            }
+//            if (0 == eye) {
+//                myVertices[i].pos.x += xoffset;
+//                myVertices[i].pos.y += yoffset;
+//            } else {
+//                myVertices[i].pos.x -= xoffset;
+//                myVertices[i].pos.y -= yoffset;
+//            }
+//        }
+//
+//        glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+//        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, myVertices, GL_DYNAMIC_DRAW);
+//
+//        GLint ploc = standardProgram.getPositionAttrib();
+//        GLint tloc = standardProgram.getTextureAttrib();
+//        glEnableVertexAttribArray(ploc);
+//        glVertexAttribPointer(ploc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, pos));
+//        glEnableVertexAttribArray(tloc);
+//        glVertexAttribPointer(tloc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, tex));
+//
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, (void*) 0);
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 //        Utils::renderFullscreenTexture(texture);
     }
