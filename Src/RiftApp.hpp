@@ -13,8 +13,8 @@ enum Eye {
 class RiftApp : public App {
 public:
     GL::FrameBuffer buffer;
-    GL::Shaders::Program distortProgram;
     Stereo::StereoConfig sconfig;
+    GL::FullscreenTexture * distortedRenderer;
     RiftApp(int x = 0, int y = 0, int width = 480, int height = 300);
     virtual ~RiftApp() {
     }

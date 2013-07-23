@@ -1,6 +1,8 @@
 #include "RiftApp.hpp"
 
 #include <opencv2/opencv.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
 using namespace cv;
@@ -92,17 +94,30 @@ public:
 
 
     void renderScene(Eye eye) {
+        glClearColor(0.0, 0.0, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
+        Stacks::projection().push(glm::perspective<float>(110.0, 0.8, 0.01, 1000.0));
 
-        Utils::renderSolidColorCube();
+        MatrixStack & mv = Stacks::modelview();
+
+        Stacks::modelview().push(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+        Utils::renderWireColorCube();
+        Stacks::modelview().pop();
+
+        Stacks::modelview().push(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0)));
+        Utils::renderWireColorCube();
+        Stacks::modelview().pop();
+
+        Stacks::modelview().push(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0)));
+        Utils::renderWireColorCube();
+        Stacks::modelview().pop();
+
 //        standardProgram.use();
 //
 //        glActiveTexture(GL_TEXTURE0);
 //        glBindTexture(GL_TEXTURE_2D, textures[0]);
 //        GLint samplerLoc = Program::getActiveProgram().getLocation(UNIFORM, "s_texture");
 //        glUniform1i(samplerLoc, 0);
-//
-//
 //
 //        Vertex myVertices[] = {
 //            Vertex(vertices[0]), //
@@ -139,8 +154,9 @@ public:
 //        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, (void*) 0);
 //        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 //        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+//
 //        Utils::renderFullscreenTexture(texture);
+        Stacks::projection().pop();
     }
 
     void update(float time) {
