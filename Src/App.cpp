@@ -37,10 +37,10 @@ namespace Encom13 {
             t1 = t2;
 
             // Make the context current
-            window.makeCurrent();
+            egl.makeCurrent();
             update(deltatime);
             display();
-            window.swap();
+            egl.swap();
 
             totaltime += deltatime;
             frames++;
@@ -54,7 +54,8 @@ namespace Encom13 {
     }
 
     void App::resize(int width, int height) {
-        window.resize(width, height);
+        this->width = width;
+        this->height = height;
     }
 
     bool App::keys(unsigned char key, int x, int y) {
@@ -65,6 +66,14 @@ namespace Encom13 {
             break;
         }
         return true;
+    }
+
+    void App::setViewport() {
+        glViewport(0, 0, (GLsizei) width, (GLsizei) height);
+    }
+
+    void App::setViewport(float xp, float yp, float wp, float hp) {
+        glViewport(xp * width, yp * height, wp * width, hp * height);
     }
 
 }

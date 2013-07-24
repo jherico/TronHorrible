@@ -34,7 +34,7 @@ using namespace Encom13::Blas;
 
 class RiftVideoApp : public RiftApp {
 public:
-    Program standardProgram;
+    Program & standardProgram;
     VideoCapture capture;
     GLuint textures[2];
     vector<GLuint> buffers;
@@ -50,7 +50,7 @@ public:
 //    int xoffset = 0, yoffset = 0;
 
     RiftVideoApp(int x = 0, int y = 0, int width = 480, int height = 300)
-            : RiftApp(x, y, width, height), standardProgram("shaders/textured.vs", "shaders/textured.fs"), vertices({
+            : RiftApp(x, y, width, height), standardProgram(*Program::getProgram("textured").get()), vertices({
                 Vertex::simpleTextured(glm::vec3(NO, NO, ZE), glm::vec2(ZE, ZE)), //
                 Vertex::simpleTextured(glm::vec3(ON, NO, ZE), glm::vec2(ON, ZE)), //
                 Vertex::simpleTextured(glm::vec3(ON, ON, ZE), glm::vec2(ON, ON)), //
@@ -96,21 +96,17 @@ public:
     void renderScene(Eye eye) {
         glClearColor(0.0, 0.0, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
-        Stacks::projection().push(glm::perspective<float>(110.0, 0.8, 0.01, 1000.0));
 
-        MatrixStack & mv = Stacks::modelview();
-
-        Stacks::modelview().push(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+        Program::getProgram("colored").get()->use();
+        Program::setActiveProjection(glm::perspective<float>(110.0, 0.8 * 2, 0.01, 1000.0));
+        Program::setActiveModelview(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
         Utils::renderWireColorCube();
-        Stacks::modelview().pop();
 
-        Stacks::modelview().push(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0)));
+        Program::setActiveModelview(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0)));
         Utils::renderWireColorCube();
-        Stacks::modelview().pop();
 
-        Stacks::modelview().push(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0)));
+        Program::setActiveModelview(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0)));
         Utils::renderWireColorCube();
-        Stacks::modelview().pop();
 
 //        standardProgram.use();
 //
@@ -156,7 +152,6 @@ public:
 //        glBindBuffer(GL_ARRAY_BUFFER, 0);
 //
 //        Utils::renderFullscreenTexture(texture);
-        Stacks::projection().pop();
     }
 
     void update(float time) {

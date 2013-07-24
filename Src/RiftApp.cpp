@@ -2,16 +2,18 @@
 
 using namespace Encom13::Stereo;
 
-//#define SKIP_MULTIPASS 1
+using namespace Encom13::GL::Shaders;
+
+#define SKIP_MULTIPASS 1
 
 namespace Encom13 {
 
 RiftApp::RiftApp(int x, int y, int width, int height)
-        : App(x, y, width, height), distortedRenderer(new GL::FullscreenTexture("distort")) {
+        : App(x, y, width, height), distortProgram(*Program::getProgram("distort").get()) {
 }
 
 void RiftApp::init() {
-    window.setViewport();
+    setViewport();
     // Allocate the frame buffer at twice the rift resolution
     buffer.init(1280, 1600);
     buffer.activate();
@@ -22,7 +24,7 @@ void RiftApp::init() {
 }
 
 void RiftApp::display() {
-    window.setViewport();
+    setViewport();
     glClearColor(0.0, 0.5, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #ifndef SKIP_MULTIPASS
@@ -33,7 +35,7 @@ void RiftApp::display() {
         buffer.deactivate();
 
         initPostProcess(eye);
-        distortedRenderer->render(buffer.getTexture());
+        GL::Utils::renderFullscreenTexture(buffer.getTexture());
     }
 #else
     renderScene(LEFT);
@@ -42,24 +44,24 @@ void RiftApp::display() {
 }
 
 void RiftApp::initPostProcess(Eye eye) {
-    float as = (float(window.width) / float(window.height)) / 2.0;
+    float as = (float(width) / float(height)) / 2.0;
     const HMDInfo & info = sconfig.GetHMDInfo();
     float lensOffset = (info.LensSeparationDistance / info.HScreenSize);
     if (eye == RIGHT) {
-        window.setViewport(0.5, 0, 0.5, 1);
+        setViewport(0.5, 0, 0.5, 1);
     } else {
         lensOffset = 1 - lensOffset;
-        window.setViewport(0, 0, 0.5, 1);
+        setViewport(0, 0, 0.5, 1);
     }
-    distortedRenderer->vertices.program.use();
-    distortedRenderer->vertices.program.setUniform2f("LensCenter", lensOffset, 0.5);
-    distortedRenderer->vertices.program.setUniform1f("AspectRatio", as);
+    distortProgram.use();
+    distortProgram.setUniform2f("LensCenter", lensOffset, 0.5);
+    distortProgram.setUniform1f("AspectRatio", as);
     const DistortionConfig & dk = sconfig.GetDistortionConfig();
     float K0 = dk.K[0];
     float K1 = dk.K[1];
     float K2 = dk.K[2];
     float K3 = dk.K[3];
-    distortedRenderer->vertices.program.setUniform4f("HmdWarpParam", K0, K1, K2, K3);
+    distortProgram.setUniform4f("HmdWarpParam", K0, K1, K2, K3);
 }
 
 }

@@ -17,13 +17,17 @@
 namespace Encom13 {
 
     class App {
-    public:
-        GL::EGL window;
+    protected:
+        int x, y;
+        int width, height;
 
-        App(int x = 0, int y = 0, int width = 16 * 30, int height = 10 * 30) :
-                window(width, height, x, y) {
-            window.createWindow();
+    public:
+        GL::EGL egl;
+
+        App(int x = 0, int y = 0, int width = 16 * 30, int height = 10 * 30) : x(x), y(y), width(width), height(height) {
+            egl.createWindow(width, height, x, y);
         }
+
         virtual ~App() {
 
         }
@@ -35,5 +39,7 @@ namespace Encom13 {
         virtual void display() = 0;
         virtual void update(float time) = 0;
         virtual bool keys(unsigned char key, int x, int y);
+        void setViewport();
+        void setViewport(float xp, float yp, float wp, float hp);
     };
 }

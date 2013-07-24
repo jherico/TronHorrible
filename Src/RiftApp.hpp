@@ -14,7 +14,7 @@ class RiftApp : public App {
 public:
     GL::FrameBuffer buffer;
     Stereo::StereoConfig sconfig;
-    GL::FullscreenTexture * distortedRenderer;
+    GL::Shaders::Program & distortProgram;
     RiftApp(int x = 0, int y = 0, int width = 480, int height = 300);
     virtual ~RiftApp() {
     }

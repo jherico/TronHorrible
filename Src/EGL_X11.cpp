@@ -34,7 +34,7 @@ namespace Encom13 {
             }
             if (xev.type == ConfigureNotify) {
                 XConfigureEvent xce = xev.xconfigure;
-                if (xce.width != window.width || xce.height != window.height) {
+                if (xce.width != width || xce.height != height) {
                     resize(xce.width, xce.height);
                 }
             }
@@ -63,13 +63,7 @@ namespace Encom13 {
 
     namespace GL {
 
-        EGLNativePixmapType EGL::createNativePixmap() {
-             Window window = createNativeWindow();
-             int d = XDefaultDepth(x_display, 0);
-             return XCreatePixmap(x_display, window, width * 10, height * 10, 32);
-        }
-
-        EGLNativeWindowType EGL::createNativeWindow() {
+        EGLNativeWindowType EGL::createNativeWindow(int width, int height, int x, int y) {
             if (x_display == NULL) {
                 x_display = XOpenDisplay(NULL);
             }

@@ -15,26 +15,18 @@ public:
     const EGLDisplay  display;
     EGLContext  context;
     EGLSurface  surface;
-    //EGLConfig config;
 
-    EGLNativeWindowType createNativeWindow();
-    EGLNativePixmapType createNativePixmap();
+    EGLNativeWindowType createNativeWindow(int w, int h, int x, int y);
 
     EGLConfig init(EGLint * attribList);
 public:
-   /// Window
-   GLint       width, height;
-   GLint       x, y;
-public:
-   EGL(int width = 1280, int height = 800, int x = 0, int y = 0);
-   void createWindow();
-   void createPixmap();
+   EGL();
+   void createWindow(int w = 1280, int h = 800, int x = 0, int y = 0);
    void surfaceless();
    void swap();
-   void resize(GLint width, GLint height);
    void makeCurrent();
-   void setViewport();
-   void setViewport(float, float, float, float);
+//   void setViewport();
+//   void setViewport(float, float, float, float);
 };
 
 }

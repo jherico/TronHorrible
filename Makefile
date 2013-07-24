@@ -1,6 +1,6 @@
 DEBUG         = 0
 CXX           = g++
-CXXFLAGS 	  = -fPIC -pipe $(DEFINES)
+CXXFLAGS 	  = -fPIC -pipe $(DEFINES) -std=c++0x -std=gnu++0x
 MD            = mkdir
 DELETEFILE    = rm -f
 SYSARCH       = $(shell uname -m)
