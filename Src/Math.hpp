@@ -17,7 +17,7 @@ enum Axis
 enum RotateDirection
 {
     Rotate_CCW = 1,
-    Rotate_CW  = -1 
+    Rotate_CW  = -1
 };
 
 enum HandedSystem
@@ -41,7 +41,7 @@ struct WorldAxes
     AxisDirection XAxis, YAxis, ZAxis;
 
     WorldAxes(AxisDirection x, AxisDirection y, AxisDirection z)
-        : XAxis(x), YAxis(y), ZAxis(z) 
+        : XAxis(x), YAxis(y), ZAxis(z)
     {  }
 };
 
@@ -53,7 +53,7 @@ struct WorldAxes
 // per type, with Math<float> and Math<double> being distinct.
 template<class Type>
 class Math
-{  
+{
 };
 
 // Single-precision Math constants class.
@@ -128,7 +128,7 @@ public:
 
     bool     operator== (const Vector2& b) const  { return x == b.x && y == b.y; }
     bool     operator!= (const Vector2& b) const  { return x != b.x || y != b.y; }
-             
+
     Vector2  operator+  (const Vector2& b) const  { return Vector2(x + b.x, y + b.y); }
     Vector2& operator+= (const Vector2& b)        { x += b.x; y += b.y; return *this; }
     Vector2  operator-  (const Vector2& b) const  { return Vector2(x - b.x, y - b.y); }
@@ -150,7 +150,7 @@ public:
     {
         return (fabs(b.x-x) < tolerance) && (fabs(b.y-y) < tolerance);
     }
-    
+
     // Dot product overload.
     // Used to calculate angle q between two vectors among other things,
     // as (A dot B) = |a||b|cos(q).
@@ -166,10 +166,10 @@ public:
 
     // Returns distance between two points represented by vectors.
     T       Distance(Vector2& b) const           { return (*this - b).Length(); }
-    
+
     // Determine if this a unit vector.
     bool    IsNormalized() const                 { return fabs(LengthSq() - T(1)) < Math<T>::Tolerance; }
-    // Normalize, convention vector length to 1.    
+    // Normalize, convention vector length to 1.
     void    Normalize()                          { *this /= Length(); }
     // Returns normalized (unit) version of the vector without modifying itself.
     Vector2 Normalized() const                   { return *this / Length(); }
@@ -205,7 +205,7 @@ public:
 
     bool     operator== (const Vector3& b) const  { return x == b.x && y == b.y && z == b.z; }
     bool     operator!= (const Vector3& b) const  { return x != b.x || y != b.y || z != b.z; }
-             
+
     Vector3  operator+  (const Vector3& b) const  { return Vector3(x + b.x, y + b.y, z + b.z); }
     Vector3& operator+= (const Vector3& b)        { x += b.x; y += b.y; z += b.z; return *this; }
     Vector3  operator-  (const Vector3& b) const  { return Vector3(x - b.x, y - b.y, z - b.z); }
@@ -227,7 +227,7 @@ public:
     {
         return (fabs(b.x-x) < tolerance) && (fabs(b.y-y) < tolerance) && (fabs(b.z-z) < tolerance);
     }
-    
+
     // Dot product overload.
     // Used to calculate angle q between two vectors among other things,
     // as (A dot B) = |a||b|cos(q).
@@ -250,10 +250,10 @@ public:
 
     // Returns distance between two points represented by vectors.
     T       Distance(Vector3& b) const           { return (*this - b).Length(); }
-    
+
     // Determine if this a unit vector.
     bool    IsNormalized() const                 { return fabs(LengthSq() - T(1)) < Math<T>::Tolerance; }
-    // Normalize, convention vector length to 1.    
+    // Normalize, convention vector length to 1.
     void    Normalize()                          { *this /= Length(); }
     // Returns normalized (unit) version of the vector without modifying itself.
     Vector3 Normalized() const                   { return *this / Length(); }
@@ -273,26 +273,26 @@ typedef Vector3<double> Vector3d;
 
 
 //-------------------------------------------------------------------------------------
-// ***** Matrix4f 
+// ***** Matrix4f
 
 // Matrix4f is a 4x4 matrix used for 3d transformations and projections.
 // Translation stored in the last column.
 // The matrix is stored in row-major order in memory, meaning that values
 // of the first row are stored before the next one.
 //
-// The arrangement of the matrix is chosen to be in Right-Handed 
+// The arrangement of the matrix is chosen to be in Right-Handed
 // coordinate system and counterclockwise rotations when looking down
 // the axis
 //
 // Transformation Order:
 //   - Transformations are applied from right to left, so the expression
 //     M1 * M2 * M3 * V means that the vector V is transformed by M3 first,
-//     followed by M2 and M1. 
+//     followed by M2 and M1.
 //
 // Coordinate system: Right Handed
 //
 // Rotations: Counterclockwise when looking down the axis. All angles are in radians.
-//    
+//
 //  | sx   01   02   tx |    // First column  (sx, 10, 20): Axis X basis vector.
 //  | 10   sy   12   ty |    // Second column (01, sy, 21): Axis Y basis vector.
 //  | 20   21   sz   tz |    // Third columnt (02, 12, sz): Axis Z basis vector.
@@ -305,7 +305,7 @@ class Matrix4f
     static Matrix4f IdentityValue;
 
 public:
-    float M[4][4];    
+    float M[4][4];
 
     enum NoInitType { NoInit };
 
@@ -315,7 +315,7 @@ public:
     // By default, we construct identity matrix.
     Matrix4f()
     {
-        SetIdentity();        
+        SetIdentity();
     }
 
     Matrix4f(float m11, float m12, float m13, float m14,
@@ -433,8 +433,8 @@ public:
 
     Matrix4f Adjugated() const
     {
-        return Matrix4f(Cofactor(0,0), Cofactor(1,0), Cofactor(2,0), Cofactor(3,0), 
-                        Cofactor(0,1), Cofactor(1,1), Cofactor(2,1), Cofactor(3,1), 
+        return Matrix4f(Cofactor(0,0), Cofactor(1,0), Cofactor(2,0), Cofactor(3,0),
+                        Cofactor(0,1), Cofactor(1,1), Cofactor(2,1), Cofactor(3,1),
                         Cofactor(0,2), Cofactor(1,2), Cofactor(2,2), Cofactor(3,2),
                         Cofactor(0,3), Cofactor(1,3), Cofactor(2,3), Cofactor(3,3));
     }
@@ -463,7 +463,7 @@ public:
         float psign = -1.0f;
         if (((A1 + 1) % 3 == A2) && ((A2 + 1) % 3 == A3)) // Determine whether even permutation
         psign = 1.0f;
-        
+
         float pm = psign*M[A1][A3];
         if (pm < -1.0f + Math<float>::SingularityRadius)
         { // South pole singularity
@@ -495,7 +495,7 @@ public:
     // rotations are CCW or CW (D) in LH or RH coordinate system (S)
     template <Axis A1, Axis A2, RotateDirection D, HandedSystem S>
     void ToEulerAnglesABA(float *a, float *b, float *c)
-    {        
+    {
         // Determine the axis that was not supplied
         int m = 3 - A1 - A2;
 
@@ -524,22 +524,22 @@ public:
         }
         return;
     }
-  
+
     // Creates a matrix that converts the vertices from one coordinate system
     // to another.
-    // 
+    //
     static Matrix4f AxisConversion(const WorldAxes& to, const WorldAxes& from)
-    {        
+    {
         // Holds axis values from the 'to' structure
         int toArray[3] = { to.XAxis, to.YAxis, to.ZAxis };
 
         // The inverse of the toArray
-        int inv[4]; 
+        int inv[4];
         inv[0] = inv[abs(to.XAxis)] = 0;
         inv[abs(to.YAxis)] = 1;
         inv[abs(to.ZAxis)] = 2;
 
-        Matrix4f m(0,  0,  0, 
+        Matrix4f m(0,  0,  0,
                    0,  0,  0,
                    0,  0,  0);
 
@@ -548,7 +548,7 @@ public:
         m.M[inv[abs(from.YAxis)]][1] = float(from.YAxis/toArray[inv[abs(from.YAxis)]]);
         m.M[inv[abs(from.ZAxis)]][2] = float(from.ZAxis/toArray[inv[abs(from.ZAxis)]]);
         return m;
-    } 
+    }
 
 
 
@@ -597,26 +597,26 @@ public:
         return t;
     }
 
-  
+
 
     //AnnaSteve : Just for quick testing.  Not for final API.  Need to remove case.
     static Matrix4f RotationAxis(Axis A, float angle, RotateDirection d, HandedSystem s)
     {
         float sina = s * d *sin(angle);
         float cosa = cos(angle);
-        
+
         switch(A)
         {
         case Axis_X:
-            return Matrix4f(1,  0,     0, 
+            return Matrix4f(1,  0,     0,
                             0,  cosa,  -sina,
                             0,  sina,  cosa);
         case Axis_Y:
-            return Matrix4f(cosa,  0,   sina, 
+            return Matrix4f(cosa,  0,   sina,
                             0,     1,   0,
                             -sina, 0,   cosa);
         case Axis_Z:
-            return Matrix4f(cosa,  -sina,  0, 
+            return Matrix4f(cosa,  -sina,  0,
                             sina,  cosa,   0,
                             0,     0,      1);
         }
@@ -634,7 +634,7 @@ public:
     {
         float sina = sin(angle);
         float cosa = cos(angle);
-        return Matrix4f(1,  0,     0, 
+        return Matrix4f(1,  0,     0,
                         0,  cosa,  -sina,
                         0,  sina,  cosa);
     }
@@ -650,7 +650,7 @@ public:
     {
         float sina = sin(angle);
         float cosa = cos(angle);
-        return Matrix4f(cosa,  0,   sina, 
+        return Matrix4f(cosa,  0,   sina,
                         0,     1,   0,
                         -sina, 0,   cosa);
     }
@@ -666,7 +666,7 @@ public:
     {
         float sina = sin(angle);
         float cosa = cos(angle);
-        return Matrix4f(cosa,  -sina,  0, 
+        return Matrix4f(cosa,  -sina,  0,
                         sina,  cosa,   0,
                         0,     0,      1);
     }
@@ -680,12 +680,12 @@ public:
 
     // LookAtLH creates a View transformation matrix for left-handed coordinate system.
     // The resulting matrix points camera from 'eye' towards 'at' direction, with 'up'
-    // specifying the up vector. 
+    // specifying the up vector.
     static Matrix4f LookAtLH(const Vector3f& eye, const Vector3f& at, const Vector3f& up);
-    
-    
+
+
     // PerspectiveRH creates a right-handed perspective projection matrix that can be
-    // used with the Oculus sample renderer. 
+    // used with the Oculus sample renderer.
     //  yfov   - Specifies vertical field of view in radians.
     //  aspect - Screen aspect ration, which is usually width/height for square pixels.
     //           Note that xfov = yfov * aspect.
@@ -694,10 +694,10 @@ public:
     // Even though RHS usually looks in the direction of negative Z, positive values
     // are expected for znear and zfar.
     static Matrix4f PerspectiveRH(float yfov, float aspect, float znear, float zfar);
-    
-    
+
+
     // PerspectiveRH creates a left-handed perspective projection matrix that can be
-    // used with the Oculus sample renderer. 
+    // used with the Oculus sample renderer.
     //  yfov   - Specifies vertical field of view in radians.
     //  aspect - Screen aspect ration, which is usually width/height for square pixels.
     //           Note that xfov = yfov * aspect.
@@ -714,7 +714,7 @@ public:
 // ***** Quat
 
 // Quatf represents a quaternion class used for rotations.
-// 
+//
 // Quaternion multiplications are done in right-to-left order, to match the
 // behavior of matrices.
 
@@ -724,7 +724,7 @@ class Quat
 {
 public:
     // w + Xi + Yj + Zk
-    T x, y, z, w;    
+    T x, y, z, w;
 
     Quat() : x(0), y(0), z(0), w(1) {}
     Quat(T x_, T y_, T z_, T w_) : x(x_), y(y_), z(z_), w(w_) {}
@@ -814,14 +814,14 @@ public:
     Quat    Conj() const                    { return Quat(-x, -y, -z, w); }
 
     // AnnaSteve fixed: order of quaternion multiplication
-    // Quaternion multiplication. Combines quaternion rotations, performing the one on the 
+    // Quaternion multiplication. Combines quaternion rotations, performing the one on the
     // right hand side first.
     Quat  operator* (const Quat& b) const   { return Quat(w * b.x + x * b.w + y * b.z - z * b.y,
                                                           w * b.y - x * b.z + y * b.w + z * b.x,
                                                           w * b.z + x * b.y - y * b.x + z * b.w,
                                                           w * b.w - x * b.x - y * b.y - z * b.z); }
 
-    // 
+    //
     // this^p normalized; same as rotating by this p times.
     Quat PowNormalized(T p) const
     {
@@ -830,15 +830,15 @@ public:
         GetAxisAngle(&v, &a);
         return Quat(v, a * p);
     }
-    
+
     // Rotate transforms vector in a manner that matches Matrix rotations (counter-clockwise,
-    // assuming negative direction of the axis). Standard formula: q(t) * V * q(t)^-1. 
+    // assuming negative direction of the axis). Standard formula: q(t) * V * q(t)^-1.
     Vector3<T> Rotate(const Vector3<T>& v) const
     {
         return ((*this * Quat<T>(v.x, v.y, v.z, 0)) * Inverted()).Imag();
     }
 
-    
+
     // Inversed quaternion rotates in the opposite direction.
     Quat        Inverted() const
     {
@@ -850,7 +850,7 @@ public:
     {
         *this = Quat(-x, -y, -z, w);
     }
-    
+
     // Converting quaternion to matrix.
     operator Matrix4f() const
     {
@@ -864,7 +864,7 @@ public:
                         float(T(2) * (x*z - w*y)), float(T(2) * (y*z + w*x)), float(ww - xx - yy + zz) );
     }
 
-    
+
     // GetEulerAngles extracts Euler angles from the quaternion, in the specified order of
     // axis rotations and the specified coordinate system. Right-handed coordinate system
     // is the default, with CCW rotations while looking in the negative axis direction.
@@ -888,7 +888,7 @@ public:
         // Determine whether even permutation
         if (((A1 + 1) % 3 == A2) && ((A2 + 1) % 3 == A3))
             psign = T(1.0);
-        
+
         T s2 = psign * T(2.0) * (psign*w*Q[A2] + Q[A1]*Q[A3]);
 
         if (s2 < (T)-1.0 + Math<T>::SingularityRadius)
@@ -912,7 +912,7 @@ public:
             *b = S*D*asin(s2);
             *c = S*D*atan2((T)2.0*(w*Q[A3] - psign*Q[A1]*Q[A2]),
 		                   ww + Q11 - Q22 - Q33);
-        }      
+        }
         return;
     }
 
@@ -991,7 +991,7 @@ typedef Quat<double> Quatd;
 
 // Cleanly representing the algebra of 2D rotations.
 // The operations maintain the angle between -Pi and Pi, the same range as atan2.
-// 
+//
 
 template<class T>
 class Angle
@@ -1004,7 +1004,7 @@ public:
 	};
 
     Angle() : a(0) {}
-    
+
 	// Fix the range to be between -Pi and Pi
 	Angle(T a_, AngularUnits u = Radians) : a((u == Radians) ? a_ : a_*Math<T>::DegreeToRadFactor) { FixRange(); }
 
@@ -1015,10 +1015,10 @@ public:
 
     bool operator== (const Angle& b) const    { return a == b.a; }
     bool operator!= (const Angle& b) const    { return a != b.a; }
-//	bool operator<  (const Angle& b) const    { return a < a.b; } 
-//	bool operator>  (const Angle& b) const    { return a > a.b; } 
-//	bool operator<= (const Angle& b) const    { return a <= a.b; } 
-//	bool operator>= (const Angle& b) const    { return a >= a.b; } 
+//	bool operator<  (const Angle& b) const    { return a < a.b; }
+//	bool operator>  (const Angle& b) const    { return a > a.b; }
+//	bool operator<= (const Angle& b) const    { return a <= a.b; }
+//	bool operator>= (const Angle& b) const    { return a >= a.b; }
 //	bool operator= (const T& x)               { a = x; FixRange(); }
 
 	// These operations assume a is already between -Pi and Pi.
@@ -1030,7 +1030,7 @@ public:
 	Angle  operator-  (const T& x) const      { return Angle(a - x); }
 	Angle& operator-= (const Angle& b)        { a = a - b.a; FastFixRange(); return *this; }
 	Angle& operator-= (const T& x)            { a = a - x; FixRange(); return *this; }
-	
+
 	T   Distance(const Angle& b)              { T c = fabs(a - b.a); return (c <= Math<T>::Pi) ? c : Math<T>::TwoPi - c; }
 
 private:
@@ -1038,7 +1038,7 @@ private:
 	// The stored angle, which should be maintained between -Pi and Pi
 	T a;
 
-	// Fixes the angle range to [-Pi,Pi], but assumes no more than 2Pi away on either side 
+	// Fixes the angle range to [-Pi,Pi], but assumes no more than 2Pi away on either side
 	inline void FastFixRange()
 	{
 		if (a < -Math<T>::Pi)

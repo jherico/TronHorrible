@@ -1,24 +1,19 @@
 #include "RiftApp.hpp"
 
-#include <opencv2/opencv.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 using namespace std;
-using namespace cv;
 using namespace boost;
+using namespace cv;
 using namespace Encom13;
 using namespace Encom13::GL;
 using namespace Encom13::GL::Shaders;
 using namespace Encom13::Stereo;
-using namespace Encom13::Blas;
 
 //#define STEREO_FILE 1
 //#define VIDEO_FILE "/home/bradd/Videos/drh.mkv"
 //#define VIDEO_FILE "/home/bradd/Videos/monsters.mp4"
 //#define VIDEO_FILE "/mnt/internal/Tron Legacy (2010).avi"
 //#define VIDEO_FILE "/home/bdavis/Videos/LG.mkv"
-//#define VIDEO_FILE "/home/bdavis/Videos/TRON.mkv"
+#define VIDEO_FILE "/home/bdavis/Videos/TRON.mkv"
 //#define VIDEO_FILE "/home/bdavis/Videos/archer.avi"
 //#define VIDEO_FILE "/mnt/media/Videos/3D/AVATAR 3D.mkv"
 //#define VIDEO_FILE "/mnt/media/Videos/3D/Dredd.2012.1080p.BluRay.3D.HSBS.x264.YIFY.mp4"
@@ -240,7 +235,7 @@ public:
 
 };
 
-int app_rift_main(int argc, char **argv) {
+int rift_video_main(int argc, char **argv) {
 //    (new RiftVideoApp(1920, 1080 * 2 - 800, 1280, 800))->run();
     (new RiftVideoApp(1920, 0, 1280, 800))->run();
 //    (new RiftVideoApp(0, 0, 1280, 800))->run();

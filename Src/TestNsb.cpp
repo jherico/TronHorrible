@@ -50,7 +50,6 @@ struct MessageBodyFrame {
 };
 
 struct SensorFusion {
-    bool SequenceValid;
     uint32_t LastTimestamp;
     uint8_t LastSampleCount;
     MessageBodyFrame currentMessage;
@@ -63,9 +62,6 @@ struct SensorFusion {
     float PredictionDT;
     float YawMult;
     float Gain;
-
-    SensorFusion() {
-    }
 
     void vec3_scale(const glm::vec3 & source, float scale, glm::vec3 & target) {
         target = source;
@@ -231,11 +227,13 @@ void hex_to_bin(std::string const& hexstr, ewkb_t & bytes) {
 }
 
 void callback(const OvrSensorMessage * message) {
+    static SensorFusion sf;
+    sf.processTrackerData(*message);
     cout << message->Samples[0].AccelY << endl;
 }
 
 int test_nsb_main(int argc, char ** argv) {
-    OVR_HANDLE handle = ovrOpenRiftRecording("/home/local/ANT/bradd/eclipse/OculusSDK/Samples/data/rift1.json");
+    OVR_HANDLE handle = ovrOpenRiftRecording("/home/bdavis/eclipse/OculusSDK/Samples/data/rift1.json");
     sleep(1);
     ovrRegisterSampleHandler(handle, callback);
     sleep(1000);

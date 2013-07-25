@@ -4,20 +4,22 @@ using namespace boost;
 using namespace std;
 
 int app_osg_main(int, char**);
-int app_rift_main(int, char**);
+int rift_video_main(int, char**);
+int rift_boxes_main(int, char**);
 int osg_animate_main(int, char**);
 int app_rift_osg_main(int, char**);
 int opencv_undistort_main(int, char**);
 int midi_main(int, char**);
 int egl_test_main(int, char**);
 int test_nsb_main(int, char**);
+int sensor_fusion_main(int, char**);
 
 
 int main(int argc , char** argv) {
     int result = -1;
     cout << "Starting" << endl;
 //    try {
-        result = test_nsb_main(argc, argv);
+        result = sensor_fusion_main(argc, argv);
         //result = app_rift_main(argc, argv);
 //    } catch (boost::exception & err) {
 //        string * pfile = boost::get_error_info<errinfo_file_name>(err);

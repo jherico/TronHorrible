@@ -11,6 +11,11 @@
 #include <boost/unordered_map.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include <opencv2/opencv.hpp>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #define GL_EXT_PROTOTYPES
 #define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2.h>
