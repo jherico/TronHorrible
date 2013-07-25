@@ -10,13 +10,14 @@ int app_rift_osg_main(int, char**);
 int opencv_undistort_main(int, char**);
 int midi_main(int, char**);
 int egl_test_main(int, char**);
+int test_nsb_main(int, char**);
 
 
 int main(int argc , char** argv) {
     int result = -1;
     cout << "Starting" << endl;
 //    try {
-        result = app_rift_main(argc, argv);
+        result = test_nsb_main(argc, argv);
         //result = app_rift_main(argc, argv);
 //    } catch (boost::exception & err) {
 //        string * pfile = boost::get_error_info<errinfo_file_name>(err);

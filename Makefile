@@ -21,9 +21,9 @@ SRCPATH       = Src
 OBJPATH       = $(TARGETPATH)
 
 # Filter out Windows and OSX files
-LIBS = -lX11 -lGLESv2 -lEGL  -lEncomGl -lboost_thread -lboost_filesystem -lopencv_imgproc -lopencv_core -lopencv_highgui -lopencv_calib3d -lboost_system 
+LIBS = -lX11 -lGLESv2 -lEGL  -lEncomGl -ljson -lboost_thread -lboost_filesystem -lopencv_imgproc -lopencv_core -lopencv_highgui -lopencv_calib3d -lboost_system -lOvrNsb 
 SRCS = $(shell find Src -name "*.cpp")
-INCS = -I../EncomGL
+INCS = -I../EncomGL -I../OculusSDK/nsb/libovr_rift  
 OBJS = $(patsubst ${SRCPATH}/%.cpp, ${OBJPATH}/%.o, ${SRCS})
 DEPS = $(patsubst ${SRCPATH}/%.cpp, ${OBJPATH}/%.d, ${SRCS})
 DIRS = $(subst /,/,$(sort $(dir $(OBJECTS)))) $(TARGETPATH)
