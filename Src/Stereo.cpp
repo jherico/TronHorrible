@@ -12,13 +12,12 @@
  otherwise accompanies this software in either electronic or hard copy form.
 
  *************************************************************************************/
-
+#include "common.hpp"
 #include "Stereo.hpp"
 
 namespace Encom13 {
 namespace Stereo {
 
-using namespace Encom13::Blas;
 //-----------------------------------------------------------------------------------
 
 // DistortionFnInverse computes the inverse of the distortion function on an argument.
@@ -80,7 +79,7 @@ StereoConfig::StereoConfig(StereoMode mode, const Viewport& vp) :
 	HMD.DistortionK[2] = Distortion.K[2];
 	HMD.DistortionK[3] = 0;
 
-	Set2DAreaFov(DegreeToRad(85.0f));
+	Set2DAreaFov(glm::radians(85.0f));
 }
 
 void StereoConfig::SetFullViewport(const Viewport& vp) {
@@ -165,7 +164,7 @@ void StereoConfig::updateComputedState() {
 	//  halfRTDistance = (VScreenSize / 2) * DistortionScale
 	//
 	if (Mode == Stereo_None) {
-		YFov = DegreeToRad(80.0f);
+		YFov = glm::radians(80.0f);
 	} else {
 		float percievedHalfRTDistance = (HMD.VScreenSize / 2)
 				* Distortion.Scale;
@@ -239,13 +238,7 @@ void StereoConfig::update2D() {
 	FovPixels = HMD.VResolution * vfovSize / HMD.VScreenSize;
 
 	// Create orthographic matrix.
-	Matrix4f& m = OrthoCenter;
-	m.SetIdentity();
-	m.M[0][0] = FovPixels / (FullView.w * 0.5f);
-	m.M[1][1] = -FovPixels / FullView.h;
-	m.M[0][3] = 0;
-	m.M[1][3] = 0;
-	m.M[2][2] = 0;
+	//glm::ortho(0, 0, -FovPixels / FullView.h, FovPixels / (FullView.w * 0.5f));
 
 	float orthoPixelOffset = (pixelDifference
 			+ offCenterShiftPixels / Distortion.Scale) * 0.5f;
@@ -254,7 +247,7 @@ void StereoConfig::update2D() {
 
 void StereoConfig::updateEyeParams() {
 	// Projection matrix for the center eye, which the left/right matrices are based on.
-	Matrix4f projCenter = Matrix4f::PerspectiveRH(YFov, Aspect, 0.01f, 1000.0f);
+	glm::mat4 projCenter = glm::perspective(YFov, Aspect, 0.01f, 1000.0f);
 
 	switch (Mode) {
 	case Stereo_None: {
@@ -264,22 +257,21 @@ void StereoConfig::updateEyeParams() {
 		break;
 
 	case Stereo_LeftRight_Multipass: {
-		Matrix4f projLeft = Matrix4f::Translation(ProjectionCenterOffset, 0, 0)
-				* projCenter, projRight = Matrix4f::Translation(
-				-ProjectionCenterOffset, 0, 0) * projCenter;
+	    glm::vec3 offset = glm::vec3(ProjectionCenterOffset, 0, 0);
+		glm::mat4 projLeft = glm::translate(glm::mat4(), offset) * projCenter;
+		offset.x = -ProjectionCenterOffset;
+		glm::mat4 projRight = glm::translate(glm::mat4(), offset) * projCenter;
 
+		offset.x = OrthoPixelOffset;
 		EyeRenderParams[0].Init(StereoEye_Left,
 				Viewport(FullView.x, FullView.y, FullView.w / 2, FullView.h),
 				+InterpupillaryDistance * 0.5f, // World view shift.
-				projLeft,
-				OrthoCenter * Matrix4f::Translation(OrthoPixelOffset, 0, 0),
-				&Distortion);
+				projLeft, OrthoCenter * glm::translate(glm::mat4(), offset), &Distortion);
+        offset.x = -OrthoPixelOffset;
 		EyeRenderParams[1].Init(StereoEye_Right,
-				Viewport(FullView.x + FullView.w / 2, FullView.y,
-						FullView.w / 2, FullView.h),
+				Viewport(FullView.x + FullView.w / 2, FullView.y, FullView.w / 2, FullView.h),
 				-InterpupillaryDistance * 0.5f, projRight,
-				OrthoCenter * Matrix4f::Translation(-OrthoPixelOffset, 0, 0),
-				&Distortion);
+                OrthoCenter * glm::translate(glm::mat4(), offset), &Distortion);
 	}
 		break;
 	}

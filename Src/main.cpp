@@ -13,13 +13,13 @@ int midi_main(int, char**);
 int egl_test_main(int, char**);
 int test_nsb_main(int, char**);
 int sensor_fusion_main(int, char**);
-
-
+int camera_calibration_main(int, char**);
+int undistort_gl_app(int, char**);
 int main(int argc , char** argv) {
     int result = -1;
     cout << "Starting" << endl;
 //    try {
-        result = sensor_fusion_main(argc, argv);
+        result = rift_video_main(argc, argv);
         //result = app_rift_main(argc, argv);
 //    } catch (boost::exception & err) {
 //        string * pfile = boost::get_error_info<errinfo_file_name>(err);

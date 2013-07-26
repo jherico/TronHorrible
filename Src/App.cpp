@@ -16,7 +16,6 @@ using namespace cv;
 using namespace boost;
 using namespace Encom13::GL;
 using namespace Encom13::Stereo;
-using namespace Encom13::Blas;
 
 namespace Encom13 {
 

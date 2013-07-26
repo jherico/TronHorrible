@@ -13,7 +13,7 @@ using namespace Encom13::Stereo;
 //#define VIDEO_FILE "/home/bradd/Videos/monsters.mp4"
 //#define VIDEO_FILE "/mnt/internal/Tron Legacy (2010).avi"
 //#define VIDEO_FILE "/home/bdavis/Videos/LG.mkv"
-#define VIDEO_FILE "/home/bdavis/Videos/TRON.mkv"
+//#define VIDEO_FILE "/home/bdavis/Videos/TRON.mkv"
 //#define VIDEO_FILE "/home/bdavis/Videos/archer.avi"
 //#define VIDEO_FILE "/mnt/media/Videos/3D/AVATAR 3D.mkv"
 //#define VIDEO_FILE "/mnt/media/Videos/3D/Dredd.2012.1080p.BluRay.3D.HSBS.x264.YIFY.mp4"
@@ -29,31 +29,23 @@ using namespace Encom13::Stereo;
 
 class RiftVideoApp : public RiftApp {
 public:
-    Program & standardProgram;
     VideoCapture capture;
     GLuint textures[2];
-    vector<GLuint> buffers;
-    Vertex vertices[4];
-    GLubyte indices[6];
-
-//    xoffset float   0.26000005
-//    yoffset float   0.049999997
-//    aspect  float   1.59999943
-//    int xoffset = 268, yoffset = 20;
+    vector<Vertex> vertices;
+    IndexBuffer indices;
     float xoffset, yoffset;
     float aspect;
-//    int xoffset = 0, yoffset = 0;
+    float zoom = 1.0;
 
     RiftVideoApp(int x = 0, int y = 0, int width = 480, int height = 300)
-            : RiftApp(x, y, width, height), standardProgram(*Program::getProgram("textured").get()), vertices({
-                Vertex::simpleTextured(glm::vec3(NO, NO, ZE), glm::vec2(ZE, ZE)), //
-                Vertex::simpleTextured(glm::vec3(ON, NO, ZE), glm::vec2(ON, ZE)), //
-                Vertex::simpleTextured(glm::vec3(ON, ON, ZE), glm::vec2(ON, ON)), //
-                Vertex::simpleTextured(glm::vec3(NO, ON, ZE), glm::vec2(ZE, ON)) //
-        }), indices({ 0, 1, 2, 2, 3, 0, }) {
+            : RiftApp(x, y, width, height), indices(GL_TRIANGLES, { 0, 1, 2, 2, 3, 0, }) {
+        vertices.push_back(Vertex::simpleTextured(glm::vec3(NO, NO, ZE), glm::vec2(ZE, ZE)));
+        vertices.push_back(Vertex::simpleTextured(glm::vec3(ON, NO, ZE), glm::vec2(ON, ZE)));
+        vertices.push_back(Vertex::simpleTextured(glm::vec3(ON, ON, ZE), glm::vec2(ON, ON)));
+        vertices.push_back(Vertex::simpleTextured(glm::vec3(NO, ON, ZE), glm::vec2(ZE, ON)));
         xoffset = 0.26;
         yoffset = 0.05;
-        aspect = 1.6;
+        aspect = 1;
     }
 
     void init() {
@@ -71,82 +63,46 @@ public:
         capture = VideoCapture(VIDEO_FILE);
 #else
         capture = VideoCapture(0);
-        capture.set( CV_CAP_PROP_FRAME_WIDTH, 1280);
-        capture.set( CV_CAP_PROP_FRAME_HEIGHT,720);
+        capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+        capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
 
 #endif
-        buffer.init(1280, 1600);
-        buffers.resize(2);
-        glDisable(GL_DEPTH_TEST);
-        glClearColor(0.0, 0.0, 0.5, 1.0);
-        glGenBuffers(2, &buffers[0]);
-
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 6, indices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
-
 
     void renderScene(Eye eye) {
         glClearColor(0.0, 0.0, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        Program::getProgram("colored").get()->use();
-        Program::setActiveProjection(glm::perspective<float>(110.0, 0.8 * 2, 0.01, 1000.0));
-        Program::setActiveModelview(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
-        Utils::renderWireColorCube();
-
-        Program::setActiveModelview(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0)));
-        Utils::renderWireColorCube();
-
-        Program::setActiveModelview(glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0)));
-        Utils::renderWireColorCube();
-
-//        standardProgram.use();
-//
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, textures[0]);
-//        GLint samplerLoc = Program::getActiveProgram().getLocation(UNIFORM, "s_texture");
+        Program::getProgram("undistort").get()->use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
+//        GLint samplerLoc = Program::getActiveProgram().get()->getLocation(UNIFORM, "s_texture");
 //        glUniform1i(samplerLoc, 0);
-//
-//        Vertex myVertices[] = {
-//            Vertex(vertices[0]), //
-//            Vertex(vertices[1]), //
-//            Vertex(vertices[2]), //
-//            Vertex(vertices[3]), //
-//        };
-//        for (int i = 0; i < 4; ++i) {
-//            if (aspect < 1) {
-//                myVertices[i].pos.x *= aspect;
-//            } else {
-//                myVertices[i].pos.y /= aspect;
-//            }
-//            if (0 == eye) {
-//                myVertices[i].pos.x += xoffset;
-//                myVertices[i].pos.y += yoffset;
-//            } else {
-//                myVertices[i].pos.x -= xoffset;
-//                myVertices[i].pos.y -= yoffset;
-//            }
-//        }
-//
-//        glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, myVertices, GL_DYNAMIC_DRAW);
-//
-//        GLint ploc = standardProgram.getPositionAttrib();
-//        GLint tloc = standardProgram.getTextureAttrib();
-//        glEnableVertexAttribArray(ploc);
-//        glVertexAttribPointer(ploc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, pos));
-//        glEnableVertexAttribArray(tloc);
-//        glVertexAttribPointer(tloc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, tex));
-//
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, (void*) 0);
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//        glBindBuffer(GL_ARRAY_BUFFER, 0);
-//
-//        Utils::renderFullscreenTexture(texture);
+
+        // Deep copy the vertices
+        vector<Vertex> myVertices = vertices;
+        for (int i = 0; i < 4; ++i) {
+            if (aspect < 1) {
+                myVertices[i].pos.x *= aspect;
+            } else {
+                myVertices[i].pos.y /= aspect;
+            }
+            if (0 == eye) {
+                myVertices[i].pos.x += xoffset;
+                myVertices[i].pos.y += yoffset;
+            } else {
+                myVertices[i].pos.x -= xoffset;
+                myVertices[i].pos.y -= yoffset;
+            }
+            myVertices[i].pos.x *= zoom;
+            myVertices[i].pos.y *= zoom;
+        }
+        VertexBuffer myVB(VERTEX_HAS_TEX, myVertices);
+        myVB.bind();
+        indices.bind();
+        indices.render();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     void update(float time) {
@@ -165,7 +121,7 @@ public:
         static int w = frame.cols;
         static int h = frame.rows;
         for (int i = 0; i < 2; ++i) {
-            static Rect rects[] = { Rect(0, 0, w / 2, h), Rect(w / 2, 0, w / 2, h) };
+            static Rect rects[] = {Rect(0, 0, w / 2, h), Rect(w / 2, 0, w / 2, h)};
             const Rect & rect = rects[i];
             Mat newImage;
             Mat(frame, rect).copyTo(newImage);
@@ -205,29 +161,34 @@ public:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.cols, image.rows, 0, GL_RGB, GL_UNSIGNED_BYTE, image.data);
     }
 
-
 #define INCR 0.01
 
     bool keys(unsigned char key, int x, int y) {
         switch (key) {
-            case 'f':
-                aspect += INCR;
-                break;
-            case 'g':
-                aspect -= INCR;
-                break;
-            case 'w':
-                yoffset += INCR;
-                break;
-            case 's':
-                yoffset -= INCR;
-                break;
-            case 'a':
-                xoffset += INCR;
-                break;
-            case 'd':
-                xoffset -= INCR;
-                break;
+        case 'f':
+            aspect += INCR;
+            break;
+        case 'g':
+            aspect -= INCR;
+            break;
+        case 'w':
+            yoffset += INCR;
+            break;
+        case 's':
+            yoffset -= INCR;
+            break;
+        case 'a':
+            xoffset += INCR;
+            break;
+        case 'd':
+            xoffset -= INCR;
+            break;
+        case 'u':
+            zoom *= 1.1;
+            break;
+        case 'j':
+            zoom /= 1.1;
+            break;
 
         }
         return RiftApp::keys(key, x, y);

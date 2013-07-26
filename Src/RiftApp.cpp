@@ -4,7 +4,7 @@ using namespace Encom13::Stereo;
 
 using namespace Encom13::GL::Shaders;
 
-#define SKIP_MULTIPASS 1
+//#define SKIP_MULTIPASS 1
 
 namespace Encom13 {
 
@@ -28,7 +28,7 @@ void RiftApp::display() {
     glClearColor(0.0, 0.5, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #ifndef SKIP_MULTIPASS
-    for (int i = 0; i < 1; ++i) {
+    for (int i = 0; i < 2; ++i) {
         Eye eye = (Eye) i;
         buffer.activate();
         renderScene(eye);

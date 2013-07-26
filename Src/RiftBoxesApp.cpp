@@ -7,7 +7,6 @@ using namespace Encom13;
 using namespace Encom13::GL;
 using namespace Encom13::GL::Shaders;
 using namespace Encom13::Stereo;
-using namespace Encom13::Blas;
 
 class RiftBoxesApp : public RiftApp {
 public:

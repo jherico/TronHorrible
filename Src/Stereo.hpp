@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Math.hpp"
 #include <memory.h>
 
 namespace Encom13 {
@@ -132,15 +131,15 @@ namespace Encom13 {
             Viewport VP;               // Viewport that we are rendering to
             const DistortionConfig* pDistortion;
 
-            Encom13::Blas::Matrix4f ViewAdjust; // Translation to be applied to view matrix.
-            Encom13::Blas::Matrix4f Projection; // Projection matrix used with this eye.
-            Encom13::Blas::Matrix4f OrthoProjection; // Orthographic projection used with this eye.
+            glm::mat4 ViewAdjust; // Translation to be applied to view matrix.
+            glm::mat4 Projection; // Projection matrix used with this eye.
+            glm::mat4 OrthoProjection; // Orthographic projection used with this eye.
 
-            void Init(StereoEye eye, const Viewport &vp, float vofs, const Encom13::Blas::Matrix4f& proj,
-                    const Encom13::Blas::Matrix4f& orthoProj, const DistortionConfig* distortion = 0) {
+            void Init(StereoEye eye, const Viewport &vp, float vofs, const glm::mat4& proj,
+                    const glm::mat4 & orthoProj, const DistortionConfig* distortion = 0) {
                 Eye = eye;
                 VP = vp;
-                ViewAdjust = Encom13::Blas::Matrix4f::Translation(Encom13::Blas::Vector3f(vofs, 0, 0));
+                ViewAdjust = glm::translate(glm::mat4(), glm::vec3(vofs, 0, 0));
                 Projection = proj;
                 OrthoProjection = orthoProj;
                 pDistortion = distortion;
@@ -266,8 +265,9 @@ namespace Encom13 {
                 updateIfDirty();
                 return YFov;
             }
+
             float GetYFOVDegrees() {
-                return Encom13::Blas::RadToDegree(GetYFOVRadians());
+                return glm::degrees(GetYFOVRadians());
             }
 
             // Query horizontal projection center offset as a distance away from the
@@ -338,7 +338,7 @@ namespace Encom13 {
 
             // Number of 2D pixels in the FOV. This defines [-1,1] coordinate range for 2D.
             float FovPixels;
-            Encom13::Blas::Matrix4f OrthoCenter;
+            glm::mat4 OrthoCenter;
             float OrthoPixelOffset;
         };
 

@@ -9,8 +9,7 @@ int board_w;
 int board_h;
 using namespace cv;
 
-int opencv_undistort_main(int argc, char* argv[])
-{
+void find_calibration() {
     board_w = 5; // Board width in squares
     board_h = 8; // Board height
     n_boards = 8; // Number of boards
@@ -87,7 +86,7 @@ int opencv_undistort_main(int argc, char* argv[])
             }
         }
         if( c == 27 )
-            return 0;
+            return;
         image = cvQueryFrame( capture ); // Get next image
     } // End collection while loop
 
@@ -126,6 +125,13 @@ int opencv_undistort_main(int argc, char* argv[])
     // Save the intrinsics and distortions
     cvSave( "Intrinsics.xml", intrinsic_matrix );
     cvSave( "Distortion.xml", distortion_coeffs );
+    cvReleaseCapture(&capture);
+}
+
+int opencv_undistort_main(int argc, char* argv[])
+{
+    CvCapture* capture = cvCreateCameraCapture( 0 );
+    IplImage *image = cvQueryFrame( capture );
 
     // Example of loading these matrices back in
     CvMat *intrinsic = (CvMat*)cvLoad( "Intrinsics.xml" );
@@ -147,15 +153,51 @@ int opencv_undistort_main(int argc, char* argv[])
         cvShowImage( "Undistort", image ); // Show corrected image
 
         // Handle pause/unpause and esc
-        int c = cvWaitKey( 15 );
-        if( c == 'p' ){
+        int c = cvWaitKey( 1 ) ;
+        if (c != -1) printf("%X\n", c);
+        c &= 0xff;
+        bool dirty = false;
+        switch (c) {
+        case 'p':
             c = 0;
             while( c != 'p' && c != 27 ){
                 c = cvWaitKey( 250 );
+                c &= 0xff;
             }
+            break;
+        case 'q':
+            distortion->data.fl[0] *= 1.1;
+            dirty = true;
+            break;
+        case 'a':
+            distortion->data.fl[0] /= 1.1;
+            dirty = true;
+            break;
+        case 'w':
+            distortion->data.fl[1] *= 1.1;
+            dirty = true;
+            break;
+        case 's':
+            distortion->data.fl[1] /= 1.1;
+            dirty = true;
+            break;
+        case 'e':
+            distortion->data.fl[2] *= 1.1;
+            dirty = true;
+            break;
+        case 'd':
+            distortion->data.fl[2] /= 1.1;
+            dirty = true;
+            break;
+        default: break;
         }
         if( c == 27 )
             break;
+        if (dirty) {
+            mapx = cvCreateImage( cvGetSize( image ), IPL_DEPTH_32F, 1 );
+            mapy = cvCreateImage( cvGetSize( image ), IPL_DEPTH_32F, 1 );
+            cvInitUndistortMap( intrinsic, distortion, mapx, mapy );
+        }
         image = cvQueryFrame( capture );
     }
 

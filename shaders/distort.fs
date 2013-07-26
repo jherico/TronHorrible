@@ -6,10 +6,11 @@ uniform vec4 HmdWarpParam;
 
 uniform sampler2D s_texture;
 varying vec4 v_texCoord;
+const vec2 scaleIn = vec2(.62, .62);
 
 vec4 HmdWarp(vec2 in_) {
     // Theta is now a vector from the center of the lens to the coordinate
-    vec2 theta = (in_ - LensCenter);
+    vec2 theta = (in_ - LensCenter) * scaleIn;
     theta.y /= AspectRatio;
     theta *= 1.5;
     // Find the distance squared between the center of the lens
@@ -33,6 +34,7 @@ vec4 HmdWarp(vec2 in_) {
 
 void main() {
     gl_FragColor = texture2D(s_texture, v_texCoord.xy);
+    return;
 //    gl_FragColor = vec4(v_texCoord.xy, 0, 1);
     vec4 warp = HmdWarp(v_texCoord.xy);
     gl_FragColor = vec4(warp.b, 0, 0, 1);
