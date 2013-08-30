@@ -1,24 +1,20 @@
-uniform mat4 Proj;
-uniform mat4 View;
+uniform mat4 u_modelview;
+uniform mat4 u_projection;
 
-attribute vec4 Position;
-attribute vec4 Color;
-attribute vec2 TexCoord;
-attribute vec2 TexCoord1;
-attribute vec3 Normal;
+attribute vec4 in_position;
+attribute vec4 in_texture;
+attribute vec4 in_normal;
+attribute vec4 in_color;
 
-varying  vec4 oColor;
-varying  vec2 oTexCoord;
-varying  vec2 oTexCoord1;
-varying  vec3 oNormal;
-varying  vec3 oVPos;
+varying vec4 v_color;
+varying vec4 v_texture;
+varying vec4 v_normal;
 
 void main()
 {
-   gl_Position = Proj * (View * Position);
-   oNormal = vec3(View * vec4(Normal,0));
-   oVPos = vec3(View * Position);
-   oTexCoord = TexCoord;
-   oTexCoord1 = TexCoord1;
-   oColor = Color;
+    v_normal = in_normal;
+    v_texture = in_texture;
+    v_color = in_color;
+
+    gl_Position = u_projection * u_modelview * in_position;
 }

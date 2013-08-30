@@ -198,7 +198,7 @@ public:
 
 int rift_video_main(int argc, char **argv) {
 //    (new RiftVideoApp(1920, 1080 * 2 - 800, 1280, 800))->run();
-    (new RiftVideoApp(1920, 0, 1280, 800))->run();
+    (new RiftVideoApp(0, 232, 1280, 800))->run();
 //    (new RiftVideoApp(0, 0, 1280, 800))->run();
     return 0;
 }

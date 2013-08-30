@@ -44,7 +44,7 @@ void find_calibration() {
 //          addWeighted(gray_image, 1.8, temp, -0.8,0,gray_image) ; //
 
         // Skp every board_dt frames to allow user to move chessboard
-//        if( frame++ % board_dt == 0 ){
+        if( frame++ % board_dt == 0 ){
             // Find chessboard corners:
             int found = cvFindChessboardCorners( image, board_sz, corners,
                 &corner_count, CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_NORMALIZE_IMAGE );
@@ -75,7 +75,7 @@ void find_calibration() {
                 CV_MAT_ELEM( *point_counts, int, successes, 0 ) = board_n;
                 successes++;
             }
-//        }
+        }
 
         // Handle pause/unpause and ESC
         int c = cvWaitKey( 15 );
@@ -130,6 +130,8 @@ void find_calibration() {
 
 int opencv_undistort_main(int argc, char* argv[])
 {
+    find_calibration();
+
     CvCapture* capture = cvCreateCameraCapture( 0 );
     IplImage *image = cvQueryFrame( capture );
 

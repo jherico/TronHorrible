@@ -21,9 +21,13 @@ SRCPATH       = Src
 OBJPATH       = $(TARGETPATH)
 
 # Filter out Windows and OSX files
-LIBS = -lX11 -lGLESv2 -lEGL  -lEncomGL -lovr_rift  -lboost_thread -lboost_filesystem -lopencv_imgproc -lopencv_features2d -lopencv_core -lopencv_highgui -lopencv_calib3d -lboost_system 
+LIBPATHS = -L../OculusSDK/LibOVR/Lib/Linux/Debug/x86_64
+LIBS = -lX11 -lGLESv2 -lEGL  -lEncomGL -lboost_thread \
+	-lboost_filesystem -lopencv_imgproc -lopencv_features2d \
+	-lopencv_core -lopencv_highgui -lopencv_calib3d -lboost_system \
+	-lopenctm 
 SRCS = $(shell find ${SRCPATH} -name "*.cpp")
-INCS = -I../EncomGL -I../OculusSDK/nsb/libovr_rift
+INCS = -I../EncomGL -I../OculusSDK/LibOVR/Src -I../OculusSDK/LibOVR/Include
 OBJS = $(patsubst ${SRCPATH}/%.cpp, ${OBJPATH}/%.o, ${SRCS})
 DEPS = $(patsubst ${SRCPATH}/%.cpp, ${OBJPATH}/%.d, ${SRCS})
 DIRS = $(subst /,/,$(sort $(dir $(OBJECTS)))) $(TARGETPATH)
@@ -44,7 +48,7 @@ foo:
 $(TARGET): $(OBJS) $(PCH)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -o $(TARGET) $(OBJS) $(LIBS)
+	g++ -o $(TARGET) $(OBJS) $(LIBS) $(LIBPATHS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

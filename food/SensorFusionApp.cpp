@@ -1,7 +1,7 @@
 
 #include "common.hpp"
 #include "App.hpp"
-#include <OVR.h>
+//#include <OVR.h>
 
 #include "SensorFusion.hpp"
 
@@ -40,8 +40,8 @@ public:
 
     virtual void init() {
         pApp = this;
-        OVR_HANDLE handle = ovrOpenRiftRecording("../OculusSDK/Samples/data/rift1.json");
-        ovrRegisterSampleHandler(handle, &SensorFusionApp::callback);
+//        OVR_HANDLE handle = ovrOpenRiftRecording("../OculusSDK/Samples/data/rift1.json");
+//        ovrRegisterSampleHandler(handle, &SensorFusionApp::callback);
     }
 
     virtual void update(float time) {

@@ -15,6 +15,8 @@ int test_nsb_main(int, char**);
 int sensor_fusion_main(int, char**);
 int camera_calibration_main(int, char**);
 int undistort_gl_app(int, char**);
+int gl_scratch_main(int, char**);
+
 int main(int argc , char** argv) {
     int result = -1;
     cout << "Starting" << endl;

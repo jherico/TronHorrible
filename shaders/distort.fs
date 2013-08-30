@@ -7,6 +7,7 @@ uniform vec4 HmdWarpParam;
 uniform sampler2D s_texture;
 varying vec4 v_texCoord;
 const vec2 scaleIn = vec2(.62, .62);
+const float ScaleFactor = 1.3;
 
 vec4 HmdWarp(vec2 in_) {
     // Theta is now a vector from the center of the lens to the coordinate
@@ -26,7 +27,7 @@ vec4 HmdWarp(vec2 in_) {
 
     theta *= factor;
     theta.y *= AspectRatio;
-//    theta *= ScaleFactor;
+    theta *= ScaleFactor;
     theta += LensCenter;
 
     return vec4(theta, rSq, factor);
