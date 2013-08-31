@@ -6,7 +6,7 @@ uniform vec4 HmdWarpParam;
 
 uniform sampler2D s_texture;
 varying vec4 v_texCoord;
-const vec2 scaleIn = vec2(.62, .62);
+const float scaleIn = .62;
 const float ScaleFactor = 1.3;
 
 vec4 HmdWarp(vec2 in_) {
@@ -34,12 +34,10 @@ vec4 HmdWarp(vec2 in_) {
 }
 
 void main() {
-    gl_FragColor = texture2D(s_texture, v_texCoord.xy);
-    return;
+//    gl_FragColor = texture2D(s_texture, v_texCoord.xy);
+//    return;
 //    gl_FragColor = vec4(v_texCoord.xy, 0, 1);
     vec4 warp = HmdWarp(v_texCoord.xy);
-    gl_FragColor = vec4(warp.b, 0, 0, 1);
-    //return;
     vec2 tc = warp.xy;
     if (!all(equal(clamp(tc, vec2(0), vec2(1)), tc)))
         gl_FragColor = vec4(warp);

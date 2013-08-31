@@ -17,7 +17,7 @@ const float PI = 3.14159;
 
 void main() {
     vec2 source = v_texCoord.xy;
-    source *= 2.0;  source -= 1.0;
+    source *= 2.4;  source -= 1.2;
     float R_u = length(source);
     // R_u = f*tan(theta)
     float theta = atan(R_u/f);
