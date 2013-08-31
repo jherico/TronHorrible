@@ -7,7 +7,19 @@ using namespace boost::filesystem;
 static char TEMP_BUFFER[8192];
 
 Shader::Shader(GLenum type, const std::string & sourceFile) :
-        type(type), shader(0), sourceFile(sourceFile), compiled(neg_infin) { }
+        type(type), shader(0), compiled(neg_infin) {
+	string testFile = sourceFile;
+	if (!exists(testFile)) {
+		testFile = "shaders/" + sourceFile + (type == GL_VERTEX_SHADER ? ".vs" : ".fs");
+	}
+	if (!exists(testFile)) {
+		testFile = "../shaders/" + sourceFile + (type == GL_VERTEX_SHADER ? ".vs" : ".fs");
+	}
+	if (!exists(testFile)) {
+		throw string("Cant find shader named " + sourceFile);
+	}
+	this->sourceFile = testFile;
+}
 
 Shader::~Shader() {
     glDeleteShader(shader);
@@ -69,6 +81,9 @@ void Shader::compile() {
     shader = newShader;
 }
 
+Program::Program(const std::string & shader)
+        : vs(GL_VERTEX_SHADER, shader), fs(GL_FRAGMENT_SHADER, shader), program(0) {
+}
 
 Program::Program(const std::string & vss, const std::string & fss)
         : vs(GL_VERTEX_SHADER, vss), fs(GL_FRAGMENT_SHADER, fss), program(0) {

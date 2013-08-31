@@ -25,7 +25,7 @@ class Shader {
     friend class Program;
     const GLenum type;
     GLuint shader;
-    const std::string sourceFile;
+    std::string sourceFile;
     boost::posix_time::ptime compiled;
 
 public:

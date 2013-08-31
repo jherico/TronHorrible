@@ -1,5 +1,22 @@
 #include "Geometry.hpp"
 
+Vertex::Vertex(const glm::vec4 & pos, const glm::vec4 & tex, const glm::vec4 & nor, const glm::vec4 & col) :
+                pos(pos), tex(tex), nor(nor), col(col) {
+}
+
+Vertex Vertex::simpleTextured(const glm::vec3 & pos, const glm::vec2 & tex) {
+    return Vertex(glm::vec4(pos, 1), glm::vec4(tex, 0, 0));
+}
+
+Vertex Vertex::simpleColored(const glm::vec3 & pos, const glm::vec4 & col) {
+    return Vertex(glm::vec4(pos, 1), glm::vec4(), glm::vec4(), col);
+}
+
+Vertex Vertex::simpleColored(const glm::vec3 & pos, const glm::vec3 & col) {
+    return Vertex(glm::vec4(pos, 1), glm::vec4(), glm::vec4(), glm::vec4(col, 1));
+}
+
+
 GLuint getVertexSize(GLuint vertexFlags) {
     int vertexSize = 1;
     if (vertexFlags & VERTEX_HAS_TEX) {

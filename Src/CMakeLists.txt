@@ -16,7 +16,7 @@ endif()
 
 
 set(EXTRA_LIBS 
-    GLESv2 EGL X11 boost_system opencv_video opencv_highgui boost_filesystem
+    GLESv2 EGL X11 boost_system  boost_filesystem opencv_video opencv_core opencv_highgui opencv_imgproc
 )
 
 #set (SOURCE_DIR ${CMAKE_SOURCE_DIR}/../Src)
