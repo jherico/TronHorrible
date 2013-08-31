@@ -14,20 +14,36 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-std=gnu++0x)
 endif()
 
-
-set(EXTRA_LIBS 
-    GLESv2 EGL X11 boost_system  boost_filesystem opencv_video opencv_core opencv_highgui opencv_imgproc
-)
-
-#set (SOURCE_DIR ${CMAKE_SOURCE_DIR}/../Src)
-
-add_executable(TronHorrible
+set(SOURCE_FILES 
     App.cpp
     EGL.cpp
-    EGL_X11.cpp
     Geometry.cpp
     Program.cpp
     Common.cpp
 )
+
+set(EXTRA_LIBS 
+    boost_system boost_filesystem opencv_video opencv_core opencv_highgui opencv_imgproc
+)
+
+if (RPI)
+    list(APPEND SOURCE_FILES 
+        EGL_RPI.cpp
+    )
+    include_directories(/opt/vc/include)
+else()
+    list(APPEND SOURCE_FILES 
+        EGL_X11.cpp
+    )
+    
+    list(APPEND EXTRA_LIBS
+        GLESv2 EGL X11
+    )
+endif()
+
+
+#set (SOURCE_DIR ${CMAKE_SOURCE_DIR}/../Src)
+
+add_executable(TronHorrible ${SOURCE_FILES})
 
 target_link_libraries(TronHorrible ${EXTRA_LIBS})
