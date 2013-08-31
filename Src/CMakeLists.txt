@@ -31,6 +31,7 @@ if (RPI)
         EGL_RPI.cpp
     )
     include_directories(/opt/vc/include)
+    include_directories(/opt/vc/include/interface/vcos/pthreads)
 else()
     list(APPEND SOURCE_FILES 
         EGL_X11.cpp
