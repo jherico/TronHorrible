@@ -33,7 +33,7 @@ struct VertexBuffer {
     typedef std::vector<V> VV;
     GLuint vertexFlags;
     VV vertices;
-    GLuint buffer;
+    GLuint buffer = -1;
 
     VertexBuffer();
     VertexBuffer(GLuint vertexFlags, std::initializer_list<Vertex> vertices);
@@ -59,7 +59,7 @@ struct VertexBuffer {
     }
 
 
-    void bind();
+    void bind(int, int);
 private:
     void initBuffer();
 };
@@ -68,7 +68,7 @@ struct IndexBuffer {
     typedef std::vector<GLuint> VI;
     GLenum type;
     VI indices;
-    GLuint buffer;
+    GLuint buffer = -1;
     IndexBuffer();
     IndexBuffer(GLenum type, std::initializer_list<GLuint> indices);
     IndexBuffer(GLenum type, std::vector<GLuint> indices);

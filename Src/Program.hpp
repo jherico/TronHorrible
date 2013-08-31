@@ -15,10 +15,8 @@ struct Var {
     GLuint id;
     GLint location;
     VarType vartype;
-
-    Var() {}; // for map usage
-    Var(VarType type, GLuint program, GLuint id) : vartype(type), id(id) {
-    }
+    Var();
+    Var(VarType varType, GLuint program, GLuint id);
 };
 
 class Shader {

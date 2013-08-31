@@ -55,8 +55,21 @@ void VertexBuffer::initBuffer() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void VertexBuffer::bind() {
+void VertexBuffer::bind(int ploc, int tloc) {
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    int vertexSize = getVertexSize(vertexFlags);
+    GLuint stride = vertexSize * sizeof(V);
+    int offset = 0;
+    {
+        glEnableVertexAttribArray(ploc);
+        glVertexAttribPointer(ploc, 4, GL_FLOAT, GL_FALSE, stride, (void *)(offset * sizeof(V)));
+        ++offset;
+    }
+    if (vertexFlags & VERTEX_HAS_TEX) {
+        glEnableVertexAttribArray(tloc);
+        glVertexAttribPointer(tloc, 4, GL_FLOAT, GL_FALSE, stride, (void *)(offset * sizeof(V)));
+        ++offset;
+    }
 }
 
 IndexBuffer::IndexBuffer() {

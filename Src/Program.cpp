@@ -6,6 +6,27 @@ using namespace boost::filesystem;
 
 static char TEMP_BUFFER[8192];
 
+Var::Var() {
+
+}
+
+Var::Var(VarType varType, GLuint program, GLuint id) : vartype(varType) {
+    this->id = id;
+    static GLchar MY_BUFFER[8192];
+    GLsizei bufSize = 8192;
+    if (varType == UNIFORM) {
+        glGetActiveUniform(program, id, bufSize, &bufSize, &size, &type, MY_BUFFER);
+    } else {
+        glGetActiveAttrib(program, id, bufSize, &bufSize, &size, &type, MY_BUFFER);
+    }
+    name = string(MY_BUFFER, bufSize);
+    if (varType == UNIFORM) {
+        location = glGetUniformLocation(program, name.c_str());
+    } else {
+        location = glGetAttribLocation(program, name.c_str());
+    }
+}
+
 Shader::Shader(GLenum type, const std::string & sourceFile) :
         type(type), shader(0), compiled(neg_infin) {
 	string testFile = sourceFile;
@@ -69,8 +90,10 @@ void Shader::compile() {
     GLint compiled;
     glGetShaderiv(newShader, GL_COMPILE_STATUS, &compiled);
     if (!compiled) {
+        string log = getLog(newShader);;
         cerr << "Failed to compile shader " << sourceFile << endl;
-        cerr << "Error log was: " << getLog(newShader);
+        cerr << "Error log was: " << log;
+        cerr << endl;
 //                    throw gl_exception() << gl_error_log(getLog()) << boost::errinfo_file_name(sourceFile);
         return;
     }
@@ -160,13 +183,13 @@ void Program::link() {
         glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &numVars);
         for (int i = 0; i < numVars; ++i) {
             Var var(ATTRIBUTE, program, i);
-            cerr << "Found attribute " << var.name << endl;
+            cerr << "Found attribute " << var.name << " " << var.location << endl;
             vars[var.name] = var;
         }
         glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numVars);
         for (int i = 0; i < numVars; ++i) {
             Var var(UNIFORM, program, i);
-            cerr << "Found uniform " << var.name << endl;
+            cerr << "Found uniform " << var.name << " " << var.location << endl;
             vars[var.name] = var;
         }
     }

@@ -19,6 +19,8 @@ class App {
     GLuint imageTexture;
     VertexBuffer vertices;
     IndexBuffer indices;
+    GLuint vertexAttribute;
+    GLuint textureAttribute;
     EGL egl;
     //        Stereo::StereoConfig sconfig;
     float xoffset, yoffset;
@@ -32,14 +34,16 @@ protected:
 public:
 
     App(int x = 0, int y = 0, int width = 1280, int height = 800)
-            : x(x), y(y), width(width), height(height), program("tronHorrible"), //
-            indices(GL_TRIANGLES, { 0, 1, 2, 2, 3, 0, }), vertices(VERTEX_HAS_TEX, { //
-                    Vertex::simpleTextured(glm::vec3(NO, NO, ZE), glm::vec2(ZE, ZE)), //
-                    Vertex::simpleTextured(glm::vec3(ON, NO, ZE), glm::vec2(ON, ZE)), //
-                    Vertex::simpleTextured(glm::vec3(ON, ON, ZE), glm::vec2(ON, ON)), //
-                    Vertex::simpleTextured(glm::vec3(NO, ON, ZE), glm::vec2(ZE, ON)) //
-                    }) {
+            : x(x), y(y), width(width), height(height), //
+            program("tronHorrible") {
         egl.createWindow(width, height, x, y);
+        indices = IndexBuffer(GL_TRIANGLES, { 0, 1, 2, 2, 3, 0, }), //
+        vertices = VertexBuffer(VERTEX_HAS_TEX, { //
+                Vertex::simpleTextured(glm::vec3(NO, NO, ZE), glm::vec2(ZE, ZE)), //
+                Vertex::simpleTextured(glm::vec3(ON, NO, ZE), glm::vec2(ON, ZE)), //
+                Vertex::simpleTextured(glm::vec3(ON, ON, ZE), glm::vec2(ON, ON)), //
+                Vertex::simpleTextured(glm::vec3(NO, ON, ZE), glm::vec2(ZE, ON)) //
+                });
     }
 
     virtual ~App() {
@@ -94,8 +98,9 @@ public:
     }
 
     virtual void init() {
+//        glDisable(GL_LIGHTING);
         glDisable(GL_DEPTH_TEST);
-        glClearColor(0.0, 0.5, 0.0, 1.0);
+        glClearColor(0.5, 0.5, 0.0, 1.0);
         glGenTextures(1, &imageTexture);
         glBindTexture(GL_TEXTURE_2D, imageTexture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -104,6 +109,10 @@ public:
         videoCapture = VideoCapture(0);
         videoCapture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
         videoCapture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+        program.use();
+        textureAttribute = program.getLocation(ATTRIBUTE, "in_texture");
+        vertexAttribute = program.getLocation(ATTRIBUTE, "in_position");
+        glUseProgram(0);
     }
 
     virtual void update(float time) {
@@ -119,18 +128,41 @@ public:
     }
 
     virtual void display() {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//        glMatrixMode(GL_PROJECTION);
+//        glLoadIdentity();
+//
+//        glMatrixMode(GL_MODELVIEW);
+//        glLoadIdentity();
+//
+//        glBegin(GL_TRIANGLES);
+//            glColor3f(1, 0, 0);
+//            glVertex3f(-1, -1, 0);
+//            glColor3f(0, 1, 0);
+//            glVertex3f(0, 1, 0);
+//            glColor3f(0, 0, 1);
+//            glVertex3f(1, -1, 0);
+//        glEnd();
+//
+//        glPointSize(10.0);
+//
+//        glBegin(GL_POINTS);
+//            glVertex3f(0, 0, 0);
+//            glVertex3f(0.5, 0.5, 0);
+//        glEnd();
+//        glFlush();
+
         program.use();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, imageTexture);
-        vertices.bind();
-        // TODO set the vertex attributes
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, imageTexture);
+        vertices.bind(vertexAttribute, textureAttribute);
         indices.bind();
         indices.render();
+        GLenum err = glGetError();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-
 };
 
 //    bool keys(unsigned char key, int x, int y) {
