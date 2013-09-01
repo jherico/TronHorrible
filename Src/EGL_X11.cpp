@@ -59,7 +59,7 @@ EGLNativeWindowType EGL::createNativeWindow(int width, int height, int x, int y)
         x_display = XOpenDisplay(NULL);
     }
     if (x_display == NULL) {
-        throw exception();
+        throw string("Failed to open X-display");
     }
 
     Window root = DefaultRootWindow(x_display);

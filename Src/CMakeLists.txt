@@ -23,7 +23,9 @@ set(SOURCE_FILES
 )
 
 set(EXTRA_LIBS 
-    boost_system boost_filesystem opencv_video opencv_core opencv_highgui opencv_imgproc
+    boost_system boost_filesystem 
+    opencv_video opencv_core opencv_highgui opencv_imgproc
+    GLESv2 EGL
 )
 
 if (RPI)
@@ -31,19 +33,20 @@ if (RPI)
         EGL_RPI.cpp
     )
     include_directories(/opt/vc/include)
+    include_directories(/opt/vc/include/interface/vmcs_host/linux)
     include_directories(/opt/vc/include/interface/vcos/pthreads)
+    link_directories(/opt/vc/lib)
+    list(APPEND EXTRA_LIBS
+         bcm_host
+    )
 else()
     list(APPEND SOURCE_FILES 
         EGL_X11.cpp
     )
-    
     list(APPEND EXTRA_LIBS
-        GLESv2 EGL X11
+         X11
     )
 endif()
-
-
-#set (SOURCE_DIR ${CMAKE_SOURCE_DIR}/../Src)
 
 add_executable(TronHorrible ${SOURCE_FILES})
 
