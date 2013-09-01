@@ -79,14 +79,14 @@ EGLNativeWindowType EGL::createNativeWindow(int width, int height, int x, int y)
         XSetWMHints(x_display, win, &hints);
     }
 
-    {
-        //code to remove decoration
-        MotifHints hints;
-        hints.flags = 2;
-        hints.decorations = 0;
-        Atom property = XInternAtom(x_display, "_MOTIF_WM_HINTS", true);
-        XChangeProperty(x_display, win, property, property, 32, PropModeReplace, (unsigned char *) &hints, 5);
-    }
+//    {
+//        //code to remove decoration
+//        MotifHints hints;
+//        hints.flags = 2;
+//        hints.decorations = 0;
+//        Atom property = XInternAtom(x_display, "_MOTIF_WM_HINTS", true);
+//        XChangeProperty(x_display, win, property, property, 32, PropModeReplace, (unsigned char *) &hints, 5);
+//    }
 
     // make the window visible on the screen
     XMapWindow(x_display, win);

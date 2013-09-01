@@ -1,5 +1,10 @@
 #pragma once
 #include "Common.hpp"
+#include <string>
+#include <map>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
 
 #pragma once
 
@@ -24,7 +29,7 @@ class Shader {
     const GLenum type;
     GLuint shader;
     std::string sourceFile;
-    boost::posix_time::ptime compiled;
+    time_t compiled;
 
 public:
     Shader(GLenum type, const std::string & sourceFile);
@@ -44,14 +49,7 @@ public:
     Program(const std::string & name);
     Program(const std::string & vss, const std::string & fss);
     virtual ~Program();
-
     GLint getLocation(VarType type, const std::string & name);
-
-    void setUniform1f(GLint location, GLfloat);
-    void setUniform2f(GLint location, GLfloat, GLfloat);
-    void setUniform4f(GLint location, GLfloat, GLfloat, GLfloat, GLfloat);
-    void setUniform4x4f(GLint location, GLfloat *);
-    void setUniform4x4f(GLint location, const glm::mat4 &);
     void use();
     void link();
     static std::string getLog(GLuint program);

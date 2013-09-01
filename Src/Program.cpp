@@ -1,10 +1,31 @@
 #include "Program.hpp"
+#include <cstring>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <boost/filesystem.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 
 using namespace std;
 using namespace boost::posix_time;
 using namespace boost::filesystem;
 
 static char TEMP_BUFFER[8192];
+
+std::string slurp(std::ifstream& in) {
+    std::stringstream sstr;
+    sstr << in.rdbuf();
+    return sstr.str();
+}
+
+std::string slurp(const std::string  in) {
+    std::ifstream ins;
+    ins.open(in.c_str());
+    return slurp(ins);
+}
+
 
 Var::Var() {
 
@@ -28,13 +49,14 @@ Var::Var(VarType varType, GLuint program, GLuint id) : vartype(varType) {
 }
 
 Shader::Shader(GLenum type, const std::string & sourceFile) :
-        type(type), shader(0), compiled(neg_infin) {
+        type(type), shader(0) { // , compiled(neg_infin) {
+    cout << current_path() << endl;
 	string testFile = sourceFile;
 	if (!exists(testFile)) {
 		testFile = "shaders/" + sourceFile + (type == GL_VERTEX_SHADER ? ".vs" : ".fs");
 	}
 	if (!exists(testFile)) {
-		testFile = "../shaders/" + sourceFile + (type == GL_VERTEX_SHADER ? ".vs" : ".fs");
+	    testFile = "../shaders/" + sourceFile + (type == GL_VERTEX_SHADER ? ".vs" : ".fs");
 	}
 	if (!exists(testFile)) {
 		throw string("Cant find shader named " + sourceFile);
@@ -61,18 +83,19 @@ std::string Shader::getLog(GLuint shader) {
 }
 
 bool Shader::isStale() {
-    ptime filetime = from_time_t(last_write_time(sourceFile));
+//    return false;
+    time_t filetime = last_write_time(sourceFile);
     return (filetime > compiled);
 }
 
 void Shader::compile() {
-    compiled = from_time_t(last_write_time(sourceFile));
+    compiled = last_write_time(sourceFile);
 
 
     // Create the shader object
     GLuint newShader = glCreateShader(type);
     if (newShader == 0)
-        throw string("fuck");
+        throw string("could not create shader");
 
     {
         std::string shaderSrc = slurp(sourceFile);
@@ -92,9 +115,7 @@ void Shader::compile() {
     if (!compiled) {
         string log = getLog(newShader);;
         cerr << "Failed to compile shader " << sourceFile << endl;
-        cerr << "Error log was: " << log;
-        cerr << endl;
-//                    throw gl_exception() << gl_error_log(getLog()) << boost::errinfo_file_name(sourceFile);
+        cerr << "Error log was: " << log << endl;
         return;
     }
 

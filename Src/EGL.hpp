@@ -1,6 +1,7 @@
 #pragma once
 #include "Common.hpp"
-
+#include <EGL/egl.h>
+#include <string>
 class EGL {
 public:
     /// Window handle

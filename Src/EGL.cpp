@@ -45,18 +45,27 @@ EGL::EGL()
 }
 
 void EGL::createWindow(int w, int h, int x, int y) {
+#ifdef RPI
     EGLint attribList[] = {
                            EGL_RED_SIZE, 8,
                            EGL_GREEN_SIZE, 8,
                            EGL_BLUE_SIZE, 8,
                            EGL_ALPHA_SIZE, 8,
                            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-//                           EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
                            EGL_NONE
                         };
+#else
+    EGLint attribList[] = {
+                           EGL_RED_SIZE, 8,
+                           EGL_GREEN_SIZE, 8,
+                           EGL_BLUE_SIZE, 8,
+                           EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                           EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                           EGL_NONE
+                        };
+#endif
 
     EGLConfig config = init(attribList);
-    cerr << config << endl;
     hWnd = createNativeWindow(w, h, x, y);
 
     // Create a surface
@@ -68,14 +77,11 @@ void EGL::createWindow(int w, int h, int x, int y) {
     // Make the context current
     makeCurrent();
     // Set background color and clear buffers
-    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
-    glClear( GL_COLOR_BUFFER_BIT );
-
-}
+ }
 
 void EGL::surfaceless() {
     int rgba_attribs[] = {
-    EGL_RED_SIZE,
+                          EGL_RED_SIZE,
                            1,
                            EGL_GREEN_SIZE,
                            1,

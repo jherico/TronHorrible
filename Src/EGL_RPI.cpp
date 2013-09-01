@@ -1,6 +1,8 @@
 //#include "App.hpp"
 #include "EGL.hpp"
 
+#include <iostream>
+#include <string>
 #include <memory.h>
 #include <bcm_host.h>
 #define TRUE 1
@@ -41,10 +43,11 @@ using namespace std;
 
 
 EGLNativeWindowType EGL::createNativeWindow(int width, int height, int x, int y) {
-    uint32_t screen_width = 1280, screen_height = 720;
+
+    uint32_t screen_width = 1280, screen_height = 800;
     // create an EGL window surface
-    int32_t success = graphics_get_display_size(0 /* LCD */, &screen_width, &screen_height);
-    assert( success >= 0 );
+//    int32_t success = graphics_get_display_size(0 /* LCD */, &screen_width, &screen_height);
+    //assert( success >= 0 );
     cerr << screen_width << endl;
     cerr << screen_height << endl;
 

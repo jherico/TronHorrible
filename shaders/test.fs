@@ -23,6 +23,7 @@ const float fillScale = 1.44139099;
 vec2 textureCoordsToDistortionOffsetCoords(vec2 texCoord) {
     bool left = (texCoord.x < 0.5);
     vec2 result = texCoord;
+    result.y = 1.0 - result.y;
     if (result.x > 0.5) {
         result.x -= 0.5;
     }
@@ -61,6 +62,6 @@ void main() {
         discard; // gl_FragColor = vec4(0, 0, 0, 1);
     } else {
         gl_FragColor = vec4(tex.xy, 1, 1);
-//        gl_FragColor = texture2D(s_texture, tex);
+//        gl_FragColor = texture2D(s_texture, tex).bgra;
     }
 }
