@@ -38,7 +38,10 @@ vec2 textureCoordsToDistortionOffsetCoords(vec2 texCoord) {
     result.x /= 1280.0 / 720.0;
     result *= 1.35;
     result += 1.0;
-    result /= 2.0;
+    result /= 1.8;
+
+
+
 
 //    // Convert from using the center of the screen as the origin to
 //    // using the lens center as the origin
@@ -61,7 +64,7 @@ void main() {
     } else  if (tex.y < 0.0) {
         discard; // gl_FragColor = vec4(0, 0, 0, 1);
     } else {
-        gl_FragColor = vec4(tex.xy, 1, 1);
-//        gl_FragColor = texture2D(s_texture, tex).bgra;
+//        gl_FragColor = vec4(tex.xy, 1, 1);
+        gl_FragColor = texture2D(s_texture, tex).bgra;
     }
 }

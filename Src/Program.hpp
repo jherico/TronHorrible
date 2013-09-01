@@ -51,6 +51,6 @@ public:
     virtual ~Program();
     GLint getLocation(VarType type, const std::string & name);
     void use();
-    void link();
+    bool link();
     static std::string getLog(GLuint program);
 };

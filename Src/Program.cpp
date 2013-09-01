@@ -163,7 +163,7 @@ std::string Program::getLog(GLuint program) {
     return log;
 }
 
-void Program::link() {
+bool Program::link() {
     if (0 == program || vs.isStale() || fs.isStale()) {
         if (vs.isStale()) {
             vs.compile();
@@ -213,7 +213,9 @@ void Program::link() {
             cerr << "Found uniform " << var.name << " " << var.location << endl;
             vars[var.name] = var;
         }
+        return true;
     }
+    return false;
 }
 
 void Program::use() {

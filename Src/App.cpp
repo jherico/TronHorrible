@@ -114,6 +114,9 @@ public:
 
     virtual void update() {
         bindNextFrame(imageTexture);
+        if (program.link()) {
+            program.use();
+        }
     }
 
     virtual void display() {
